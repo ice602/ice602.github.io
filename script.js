@@ -17,7 +17,7 @@ async function loadDatabase() {
         return songs;
     } catch (error) {
         console.error(error);
-        document.getElementById('videoResult').innerHTML = '<p>Error ex!</p>';
+        document.getElementById('videoResult').innerHTML = '<p>데이터 로드중 에러 발생!</p>';
     }
 }
 
