@@ -35,7 +35,7 @@ function searchSong() {
 
 function displayVideo(song) {
     const videoId = song.videoUrl.split('v=')[1];
-    const languageText = song.languages
+    const languageText = song.language
         .map(lang => ({
             jp: "일본어",
             en: "영어",
