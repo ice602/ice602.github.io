@@ -1,18 +1,28 @@
 async function loadDatabase() {
+    const SHEET_ID = '1jCaOGoqhavuJnscDA_wSTNMqVCGT6WRuXkDZwjKcH3Q';
+    const url = `https://spreadsheets.google.com/feeds/list/${SHEET_ID}/1/public/values?alt=json`;
     try {
-        const response = await fetch('songs.json');
-        if (!response.ok) throw new Error(`JSON 로드 실패: ${response.status}`);
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Sheet not loaded: ${response.status}`);
         const data = await response.json();
-        console.log('데이터:', data);
-        return data;
+
+        const songs = data.feed.entry.map(entry => ({
+            title: entry.gsx$title.$t,
+            artist: entry.gsx$artist.$t,
+            videoUrl: entry.gsx$videourl.$t,
+            karaokeId: entry.gsx$karaokeid.$t,
+            language: entry.gsx$language.$t.split(',')
+        }));
+        console.log('data:', songs);
+        return songs;
     } catch (error) {
         console.error(error);
-        document.getElementById('videoResult').innerHTML = '<p>데이터 로드 중 오류 발생!</p>';
+        document.getElementById('videoResult').innerHTML = '<p>Error ex!</p>';
     }
 }
 
 function normalizeJapanese(text) {
-    return text.replace(/[\u3040-\u309F]/g, ch => 
+    return text.replace(/[\u3040-\u309F]/g, ch =>
         String.fromCharCode(ch.charCodeAt(0) + 0x60)
     ).toLowerCase();
 }
@@ -30,8 +40,8 @@ function searchSong() {
             const normalizedArtist = normalizeJapanese(artist);
 
             return title.includes(query) || artist.includes(query) ||
-                   normalizedTitle.includes(normalizedQuery) || 
-                   normalizedArtist.includes(normalizedQuery);
+                normalizedTitle.includes(normalizedQuery) ||
+                normalizedArtist.includes(normalizedQuery);
         });
 
         if (results.length > 0) {
@@ -45,7 +55,7 @@ function searchSong() {
 function displayVideo(song) {
     const videoId = song.videoUrl.split('v=')[1];
     const languageText = song.language
-        .map(lang => ({ jp: "일본어", en: "영어", kr: "한국어" }[lang] || lang))
+        .map(lang => ({ jp: "일본어", en: "영어", kr: "한국어" }[lang.trim()] || lang.trim()))
         .join(", ");
 
     document.getElementById('videoResult').innerHTML = `
@@ -54,7 +64,6 @@ function displayVideo(song) {
     `;
 }
 
-// 엔터키 이벤트 추가
 document.getElementById('searchInput').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         searchSong();
