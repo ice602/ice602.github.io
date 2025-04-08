@@ -2,14 +2,19 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>JPOP 노래방 검색기</title>
+    <title>JPOP Karaoke</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<h1>JPOP 노래방 검색기</h1>
-<input type="text" id="searchInput" placeholder="노래 제목이나 가수를 입력하세요">
-<button onclick="searchSong()">검색</button>
-<div id="videoResult"></div>
-<script src="script.js"></script>
+    <div class="container">
+        <h1>JPOP Karaoke</h1>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="노래 제목이나 가수를 검색하세요">
+            <button onclick="searchSong()">검색</button>
+        </div>
+        <div id="videoResult" class="video-container"></div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
